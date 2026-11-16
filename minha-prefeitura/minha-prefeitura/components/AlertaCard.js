@@ -1,171 +1,151 @@
 
-import React, { useState } from 'react';
+import React from 'react';
 
 import {
-  View,
+  StyleSheet,
   Text,
+  View,
   TouchableOpacity,
-  StyleSheet
 } from 'react-native';
 
 import { Ionicons } from '@expo/vector-icons';
 
-export default function AlertaCard({ alerta }) {
-
-  const [expandido, setExpandido] = useState(false);
-
-  // Define a cor conforme o tipo do alerta
-  const cores = {
-  informativo: {
-    fundo: '#bfdbfe',
-    borda: '#1d4ed8',
-    icone: '#1d4ed8',
-    titulo: '#1e3a8a'
-  },
-
-  importante: {
-    fundo: '#fed7aa',
-    borda: '#ea580c',
-    icone: '#c2410c',
-    titulo: '#9a3412'
-  },
-
-  urgente: {
-    fundo: '#fecaca',
-    borda: '#dc2626',
-    icone: '#b91c1c',
-    titulo: '#7f1d1d'
-  }
-};
-
-  const cor = cores[alerta.tipo] || cores.informativo;
-
-  const icone = alerta.tipo === 'urgente'
-    ? 'alert-circle'
-    : alerta.tipo === 'importante'
-      ? 'warning'
-      : 'information-circle';
+export default function AlertaCard({ alerta, onPress }) {
+  if (!alerta) return null;
 
   return (
     <TouchableOpacity
       activeOpacity={0.85}
-      onPress={() => setExpandido(!expandido)}
-      style={[
-        styles.card,
-        {
-          backgroundColor: cor.fundo,
-          borderLeftColor: cor.borda
-        }
-      ]}
+      onPress={onPress}
+      style={styles.card}
     >
+      <View style={styles.faixa} />
 
-      {/* Conteúdo principal */}
-      <View style={styles.linha}>
+      <View style={styles.conteudo}>
+        <View style={styles.topo}>
+          <View style={styles.identificacao}>
+            <View style={styles.iconBox}>
+              <Ionicons
+                name="alert-circle"
+                size={20}
+                color="#dc2626"
+              />
+            </View>
 
-        <Ionicons
-          name={icone}
-          size={24}
-          color={cor.icone}
-          style={styles.icone}
-        />
+            <Text style={styles.categoria}>
+              COMUNICADO OFICIAL
+            </Text>
+          </View>
 
-        <View style={styles.conteudo}>
-
-          <Text
-            style={[
-              styles.titulo,
-              { color: cor.titulo }
-            ]}
-          >
-            {alerta.titulo}
-          </Text>
-
-          <Text style={styles.descricao}>
-            {alerta.descricao}
-          </Text>
-
-        </View>
-
-        <Ionicons
-          name={expandido ? 'chevron-up' : 'chevron-down'}
-          size={20}
-          color={cor.titulo}
-        />
-
-      </View>
-
-      {/* Detalhes expansíveis */}
-      {expandido && (
-
-        <View style={styles.detalhes}>
-
-          <View
-            style={[
-              styles.divisor,
-              { backgroundColor: cor.borda }
-            ]}
+          <Ionicons
+            name="chevron-forward"
+            size={19}
+            color="#94a3b8"
           />
-
-          <Text style={styles.textoDetalhes}>
-            {alerta.detalhes}
-          </Text>
-
         </View>
 
-      )}
+        <Text style={styles.titulo}>
+          {alerta.titulo}
+        </Text>
 
+        <Text style={styles.mensagem} numberOfLines={3}>
+          {alerta.mensagem}
+        </Text>
+
+        <View style={styles.rodape}>
+          <Text style={styles.abrir}>
+            Ver comunicado completo
+          </Text>
+
+          <Ionicons
+            name="arrow-forward"
+            size={14}
+            color="#b91c1c"
+          />
+        </View>
+      </View>
     </TouchableOpacity>
   );
 }
 
 const styles = StyleSheet.create({
-
   card: {
-    borderLeftWidth: 4,
-    padding: 14,
-    borderRadius: 10,
-    marginBottom: 10
-  },
-
-  linha: {
     flexDirection: 'row',
-    alignItems: 'center'
+    backgroundColor: '#fff',
+    borderRadius: 15,
+    overflow: 'hidden',
+    borderWidth: 1,
+    borderColor: '#fee2e2',
+    elevation: 2,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.05,
+    shadowRadius: 5,
   },
 
-  icone: {
-    marginRight: 10
+  faixa: {
+    width: 5,
+    backgroundColor: '#dc2626',
   },
 
   conteudo: {
-    flex: 1
+    flex: 1,
+    padding: 15,
+  },
+
+  topo: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    marginBottom: 12,
+  },
+
+  identificacao: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+  },
+
+  iconBox: {
+    width: 30,
+    height: 30,
+    borderRadius: 9,
+    backgroundColor: '#fee2e2',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+
+  categoria: {
+    fontSize: 9,
+    fontWeight: '800',
+    color: '#b91c1c',
+    letterSpacing: 0.8,
   },
 
   titulo: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    color: '#1f2937',
+    lineHeight: 22,
+    marginBottom: 7,
+  },
+
+  mensagem: {
+    fontSize: 12,
+    color: '#64748b',
+    lineHeight: 19,
+  },
+
+  rodape: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 6,
+    marginTop: 14,
+  },
+
+  abrir: {
     fontSize: 11,
-    fontWeight: 'bold'
+    fontWeight: '700',
+    color: '#b91c1c',
   },
-
-  descricao: {
-    fontSize: 12,
-    color: '#4b5563',
-    marginTop: 4,
-    lineHeight: 17
-  },
-
-  detalhes: {
-    marginTop: 12
-  },
-
-  divisor: {
-    height: 1,
-    opacity: 0.3,
-    marginBottom: 10
-  },
-
-  textoDetalhes: {
-    fontSize: 12,
-    color: '#4b5563',
-    lineHeight: 19
-  }
-
 });

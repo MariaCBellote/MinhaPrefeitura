@@ -4,9 +4,20 @@ import { Ionicons } from '@expo/vector-icons';
 
 import ScreenHeader from '../components/ScreenHeader';
 import CategoryTag from '../components/Categorytag';
+import { useFetch, LoadingState, ErrorState } from '../components/ApiStates';
+import { buscarNoticia } from '../data/API';
 
+// Recebe { noticia } (vindo da lista) OU { noticiaSlug } (vindo de uma notificação).
+// Sempre busca o detalhe completo na API pelo slug.
 export default function DetalhesNoticia({ route, navigation }) {
-  const { noticia } = route.params;
+  const { noticia: noticiaInicial, noticiaSlug } = route.params || {};
+  const slug = noticiaSlug || noticiaInicial?.slug;
+
+  const { data, loading, error, recarregar } = useFetch(
+    () => (slug ? buscarNoticia(slug) : Promise.resolve(noticiaInicial)),
+    [slug]
+  );
+  const noticia = data || noticiaInicial;
 
   return (
     <SafeAreaView style={styles.container}>
@@ -17,17 +28,23 @@ export default function DetalhesNoticia({ route, navigation }) {
           onVoltar={() => navigation.goBack()}
         />
 
-        <View style={styles.card}>
-          <Image source={{ uri: noticia.imagem }} style={styles.imagem} />
-          <View style={styles.corpo}>
-            <CategoryTag categoria={noticia.categoria} />
-            <Text style={styles.titulo}>{noticia.titulo}</Text>
-            <Text style={styles.data}>
-              <Ionicons name="calendar-outline" size={12} color="#9ca3af" /> {noticia.data}
-            </Text>
-            <Text style={styles.conteudo}>{noticia.conteudo}</Text>
+        {loading && !noticia ? (
+          <LoadingState />
+        ) : error && !noticia ? (
+          <ErrorState mensagem={error} onTentarNovamente={recarregar} />
+        ) : noticia ? (
+          <View style={styles.card}>
+            {noticia.imagem ? <Image source={{ uri: noticia.imagem }} style={styles.imagem} /> : null}
+            <View style={styles.corpo}>
+              <CategoryTag categoria={noticia.categoria} />
+              <Text style={styles.titulo}>{noticia.titulo}</Text>
+              <Text style={styles.data}>
+                <Ionicons name="calendar-outline" size={12} color="#9ca3af" /> {noticia.data}
+              </Text>
+              <Text style={styles.conteudo}>{noticia.conteudo || noticia.resumo}</Text>
+            </View>
           </View>
-        </View>
+        ) : null}
       </ScrollView>
     </SafeAreaView>
   );

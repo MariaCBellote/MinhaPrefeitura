@@ -7,16 +7,15 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
 import { Ionicons } from '@expo/vector-icons';
 
-import {
-  ComunicadosProvider
-} from './components/ComunicadosContext';
+import { ComunicadosProvider } from './components/ComunicadosContext';
 
 // Importação das telas
 import Inicio from './telas/Inicio';
 import Perfil from './telas/Perfil';
 import Noticias from './telas/Noticias';
 import Servicos from './telas/Servicos';
-import Notificacoes from './telas/Notificacao';
+import Notificacao from './telas/Notificacao';
+import DetalhesNotificacao from './telas/DetalhesNotificacao';
 import DetalhesNoticia from './telas/DetalhesNoticia';
 
 const Tab = createBottomTabNavigator();
@@ -39,7 +38,6 @@ function NavegacaoPrincipal() {
         },
       }}
     >
-
       <Tab.Screen
         name="Início"
         component={Inicio}
@@ -79,7 +77,6 @@ function NavegacaoPrincipal() {
           ),
         }}
       />
-
     </Tab.Navigator>
   );
 }
@@ -98,7 +95,12 @@ export default function App() {
 
           <Stack.Screen
             name="Notificacoes"
-            component={Notificacoes}
+            component={Notificacao}
+          />
+
+          <Stack.Screen
+            name="DetalhesNotificacao"
+            component={DetalhesNotificacao}
           />
 
           <Stack.Screen

@@ -7,21 +7,29 @@ import SearchBar from '../components/Searchbar';
 import CategoryChips from '../components/Categorychips';
 import NewsCard from '../components/Newscard';
 import EmptyState from '../components/Emptystate';
-import { noticiasMock, categoriasNoticiasMock } from '../data/mockData';
+import { useFetch, LoadingState, ErrorState } from '../components/ApiStates';
+import { listarNoticias } from '../data/API';
 
 export default function Noticias() {
   const navigation = useNavigation();
+  const { data: noticias, loading, error, recarregar } = useFetch(listarNoticias);
   const [busca, setBusca] = useState('');
   const [categoria, setCategoria] = useState('Todas');
 
-  const noticiasFiltradas = useMemo(
+  // categorias geradas a partir das notícias recebidas
+  const categorias = useMemo(
+    () => ['Todas', ...new Set((noticias || []).map((n) => n.categoria))],
+    [noticias]
+  );
+
+  const filtradas = useMemo(
     () =>
-      noticiasMock.filter((n) => {
+      (noticias || []).filter((n) => {
         const okCategoria = categoria === 'Todas' || n.categoria === categoria;
         const okBusca = n.titulo.toLowerCase().includes(busca.toLowerCase());
         return okCategoria && okBusca;
       }),
-    [busca, categoria]
+    [noticias, busca, categoria]
   );
 
   const abrirDetalhes = (noticia) => navigation.navigate('DetalhesNoticia', { noticia });
@@ -33,21 +41,24 @@ export default function Noticias() {
           <SearchBar value={busca} onChangeText={setBusca} placeholder="Buscar notícias..." />
         </ScreenHeader>
 
-        <View style={styles.chips}>
-          <CategoryChips
-            categorias={categoriasNoticiasMock}
-            selecionada={categoria}
-            onSelect={setCategoria}
-          />
-        </View>
-
-        <View style={styles.lista}>
-          {noticiasFiltradas.length === 0 ? (
-            <EmptyState mensagem="Nenhuma notícia encontrada." />
-          ) : (
-            noticiasFiltradas.map((n) => <NewsCard key={n.id} noticia={n} onPress={abrirDetalhes} />)
-          )}
-        </View>
+        {loading ? (
+          <LoadingState mensagem="Carregando notícias..." />
+        ) : error ? (
+          <ErrorState mensagem={error} onTentarNovamente={recarregar} />
+        ) : (
+          <>
+            <View style={styles.chips}>
+              <CategoryChips categorias={categorias} selecionada={categoria} onSelect={setCategoria} />
+            </View>
+            <View style={styles.lista}>
+              {filtradas.length === 0 ? (
+                <EmptyState mensagem="Nenhuma notícia encontrada." />
+              ) : (
+                filtradas.map((n) => <NewsCard key={n.id} noticia={n} onPress={abrirDetalhes} />)
+              )}
+            </View>
+          </>
+        )}
       </ScrollView>
     </SafeAreaView>
   );
