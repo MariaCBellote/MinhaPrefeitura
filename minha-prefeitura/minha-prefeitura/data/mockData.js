@@ -176,9 +176,12 @@ export const servicosMock = [
     descricao: 'Pontos de descarte de recicláveis.' },
   { id: 's8', nome: 'Enquetes', categoria: 'Atendimento', icone: 'stats-chart-outline', lib: 'ION', cor: '#be185d', fundo: '#fce7f3',
     descricao: 'Opine sobre projetos e prioridades da cidade.' },
+  { id: 's9', nome: 'Eventos', categoria: 'Entretenimento', icone: 'calendar-star-outline', lib: 'MCI', cor: '#c2410c', fundo: '#ffedd5',
+    descricao: 'Veja os eventos que irão ocorrer na cidade.' },
+  
 ];
 
-export const categoriasServicosMock = ['Todos', 'Utilidades', 'Saúde', 'Atendimento'];
+export const categoriasServicosMock = ['Todos', 'Utilidades', 'Saúde', 'Atendimento', 'Entretenimento'];
 
 // Cores das tags por categoria (usadas por NewsCard e DetalhesNoticia)
 export const coresCategoriaMock = {
