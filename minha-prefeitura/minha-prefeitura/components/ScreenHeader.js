@@ -25,19 +25,19 @@ export default function ScreenHeader({ titulo, subtitulo, onVoltar, children }) 
 
 const styles = StyleSheet.create({
   header: {
-    backgroundColor: '#1d4ed8',
+    backgroundColor: '#1746B0',
     paddingHorizontal: 20,
-    paddingTop: 20,
-    paddingBottom: 24,
-    borderBottomLeftRadius: 24,
-    borderBottomRightRadius: 24,
+    paddingTop: 24,
+    paddingBottom: 27,
+    borderBottomLeftRadius: 28,
+    borderBottomRightRadius: 28,
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.1,
     shadowRadius: 4,
     elevation: 3,
   },
-  row: { flexDirection: 'row', alignItems: 'center', marginBottom: 16 },
+  row: { flexDirection: 'row', alignItems: 'center', marginBottom: 18 },
   backBtn: {
     width: 36,
     height: 36,
@@ -47,6 +47,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginRight: 10,
   },
-  subtitulo: { fontSize: 11, color: '#bfdbfe' },
-  titulo: { fontSize: 18, fontWeight: 'bold', color: '#fff' },
+  subtitulo: { fontSize: 11, color: '#dbeafe', marginBottom: 4, letterSpacing: 0.4 },
+  titulo: { fontSize: 23, fontWeight: '800', color: '#fff', letterSpacing: -0.4 },
 });

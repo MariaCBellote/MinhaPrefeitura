@@ -8,7 +8,7 @@ import CategoryChips from '../components/Categorychips';
 import NewsCard from '../components/Newscard';
 import EmptyState from '../components/Emptystate';
 import { useFetch, LoadingState, ErrorState } from '../components/ApiStates';
-import { listarNoticias } from '../data/API';
+import { listarNoticias, CATEGORIAS_NOTICIAS } from '../data/API';
 
 export default function Noticias() {
   const navigation = useNavigation();
@@ -17,16 +17,14 @@ export default function Noticias() {
   const [categoria, setCategoria] = useState('Todas');
 
   // categorias geradas a partir das notícias recebidas
-  const categorias = useMemo(
-    () => ['Todas', ...new Set((noticias || []).map((n) => n.categoria))],
-    [noticias]
-  );
+  const categorias = CATEGORIAS_NOTICIAS;
 
   const filtradas = useMemo(
     () =>
       (noticias || []).filter((n) => {
         const okCategoria = categoria === 'Todas' || n.categoria === categoria;
-        const okBusca = n.titulo.toLowerCase().includes(busca.toLowerCase());
+        const termo = busca.trim().toLocaleLowerCase('pt-BR');
+        const okBusca = `${n.titulo || ''} ${n.resumo || ''}`.toLocaleLowerCase('pt-BR').includes(termo);
         return okCategoria && okBusca;
       }),
     [noticias, busca, categoria]
@@ -65,8 +63,8 @@ export default function Noticias() {
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: '#f3f4f6' },
-  scroll: { paddingBottom: 80 },
-  chips: { marginTop: 16 },
-  lista: { paddingHorizontal: 16, marginTop: 16, gap: 10 },
+  container: { flex: 1, backgroundColor: '#f5f7fb' },
+  scroll: { paddingBottom: 90 },
+  chips: { marginTop: 18 },
+  lista: { paddingHorizontal: 18, marginTop: 18, gap: 13 },
 });

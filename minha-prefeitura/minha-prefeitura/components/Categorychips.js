@@ -24,16 +24,16 @@ export default function CategoryChips({ categorias, selecionada, onSelect }) {
 }
 
 const styles = StyleSheet.create({
-  container: { paddingHorizontal: 16, gap: 8 },
+  container: { paddingHorizontal: 18, gap: 9, paddingVertical: 2 },
   chip: {
-    paddingHorizontal: 14,
-    paddingVertical: 7,
-    borderRadius: 20,
-    backgroundColor: '#fff',
+    paddingHorizontal: 16,
+    paddingVertical: 9,
+    borderRadius: 22,
+    backgroundColor: '#ffffff',
     borderWidth: 1,
-    borderColor: '#e5e7eb',
+    borderColor: '#e2e8f0',
   },
-  chipAtivo: { backgroundColor: '#1d4ed8', borderColor: '#1d4ed8' },
-  texto: { fontSize: 12, fontWeight: '600', color: '#374151' },
+  chipAtivo: { backgroundColor: '#1746B0', borderColor: '#1746B0', elevation: 2 },
+  texto: { fontSize: 12, fontWeight: '700', color: '#374151' },
   textoAtivo: { color: '#fff' },
 });

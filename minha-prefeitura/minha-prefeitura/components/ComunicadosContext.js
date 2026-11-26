@@ -1,117 +1,63 @@
+import React, { createContext, useContext, useState, useEffect, useCallback } from 'react';
+import { listarNotificacoes } from '../data/API';
 
-import React, {
-  createContext,
-  useContext,
-  useState,
-  useEffect
-} from 'react';
-
-import {
-  alertasMock,
-  notificacoesMock
-} from '../data/mockData';
-
-const ComunicadosContext = createContext();
+const ComunicadosContext = createContext(null);
 
 export function ComunicadosProvider({ children }) {
+  const [notificacoes, setNotificacoes] = useState([]);
+  const [carregando, setCarregando] = useState(true);
+  const [erro, setErro] = useState(null);
 
-  const [alertaAtual, setAlertaAtual] = useState(
-    alertasMock[0]
-  );
-
-  const [notificacoes, setNotificacoes] = useState(
-    notificacoesMock.slice(0, 2).map(item => ({
-      ...item,
-      lida: false
-    }))
-  );
-
-  // Evita repetir o mesmo alerta consecutivamente
-  const escolherAleatorio = (lista, atualId) => {
-    const outrasOpcoes = lista.filter(
-      item => item.id !== atualId
-    );
-
-    const indice = Math.floor(
-      Math.random() * outrasOpcoes.length
-    );
-
-    return outrasOpcoes[indice];
-  };
-
-  useEffect(() => {
-
-    const intervalo = setInterval(() => {
-
-      // Alterna o aviso da tela inicial
-      setAlertaAtual(atual => {
-        return escolherAleatorio(
-          alertasMock,
-          atual.id
-        );
-      });
-
-      // Adiciona uma nova notificação
-      setNotificacoes(anteriores => {
-
-        const nova = escolherAleatorio(
-          notificacoesMock,
-          null
-        );
-
-        return [
-          {
-            ...nova,
-            id: `${nova.id}-${Date.now()}`,
-            lida: false,
-            data: new Date().toLocaleDateString('pt-BR')
-          },
-          ...anteriores
-        ].slice(0, 20);
-
-      });
-
-    }, 30000); // 30 segundos para teste
-
-    return () => clearInterval(intervalo);
-
+  const carregar = useCallback(async () => {
+    try {
+      setErro(null);
+      const dados = await listarNotificacoes();
+      setNotificacoes((anteriores) =>
+        dados.map((item) => ({
+          ...item,
+          lida: anteriores.find((n) => n.id === item.id)?.lida ?? false,
+        }))
+      );
+    } catch (e) {
+      setErro(e.message || 'Não foi possível carregar os comunicados.');
+    } finally {
+      setCarregando(false);
+    }
   }, []);
 
-  // Marcar uma notificação como lida
+  useEffect(() => {
+    carregar();
+    const intervalo = setInterval(carregar, 60000);
+    return () => clearInterval(intervalo);
+  }, [carregar]);
+
   const marcarComoLida = (id) => {
-    setNotificacoes(anteriores =>
-      anteriores.map(item =>
-        item.id === id
-          ? { ...item, lida: true }
-          : item
-      )
+    setNotificacoes((lista) =>
+      lista.map((item) => item.id === id ? { ...item, lida: true } : item)
     );
   };
 
-  // Marcar todas como lidas
   const marcarTodasComoLidas = () => {
-    setNotificacoes(anteriores =>
-      anteriores.map(item => ({
-        ...item,
-        lida: true
-      }))
-    );
+    setNotificacoes((lista) => lista.map((item) => ({ ...item, lida: true })));
   };
 
-  const naoLidas = notificacoes.filter(
-    item => !item.lida
-  ).length;
+  const alertas = notificacoes.filter((item) =>
+    item.titulo?.toLocaleLowerCase('pt-BR').includes('alerta')
+  );
+  const naoLidas = notificacoes.filter((item) => !item.lida).length;
 
   return (
-    <ComunicadosContext.Provider
-      value={{
-        alertaAtual,
-        notificacoes,
-        naoLidas,
-        marcarComoLida,
-        marcarTodasComoLidas
-      }}
-    >
+    <ComunicadosContext.Provider value={{
+      notificacoes,
+      alertas,
+      alertaAtual: alertas[0] || null,
+      naoLidas,
+      carregando,
+      erro,
+      recarregar: carregar,
+      marcarComoLida,
+      marcarTodasComoLidas,
+    }}>
       {children}
     </ComunicadosContext.Provider>
   );

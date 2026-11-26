@@ -1,5 +1,5 @@
 
-import React from 'react';
+import React, { useContext } from 'react';
 
 import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
@@ -9,14 +9,25 @@ import { Ionicons } from '@expo/vector-icons';
 
 import { ComunicadosProvider } from './components/ComunicadosContext';
 
-// Importação das telas
+import {
+  UsuarioProvider,
+  UsuarioContext,
+} from './context/UsuarioContext';
+
+// Importação das telas principais
 import Inicio from './telas/Inicio';
 import Perfil from './telas/Perfil';
 import Noticias from './telas/Noticias';
 import Servicos from './telas/Servicos';
+
+// Importação das telas de notificações
 import Notificacao from './telas/Notificacao';
 import DetalhesNotificacao from './telas/DetalhesNotificacao';
 import DetalhesNoticia from './telas/DetalhesNoticia';
+
+// Importação das telas de autenticação
+import Login from './telas/Login';
+import Cadastro from './telas/Cadastro';
 
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
@@ -27,14 +38,22 @@ function NavegacaoPrincipal() {
     <Tab.Navigator
       screenOptions={{
         headerShown: false,
+
         tabBarActiveTintColor: '#1d4ed8',
         tabBarInactiveTintColor: '#9ca3af',
+
         tabBarStyle: {
           backgroundColor: '#ffffff',
           borderTopColor: '#e5e7eb',
-          height: 60,
-          paddingBottom: 6,
-          paddingTop: 6,
+          height: 66,
+          paddingBottom: 8,
+          paddingTop: 8,
+          borderTopWidth: 1,
+          elevation: 12,
+          shadowColor: '#0f172a',
+          shadowOpacity: 0.08,
+          shadowRadius: 12,
+          shadowOffset: { width: 0, height: -3 },
         },
       }}
     >
@@ -43,7 +62,11 @@ function NavegacaoPrincipal() {
         component={Inicio}
         options={{
           tabBarIcon: ({ color, size }) => (
-            <Ionicons name="home-outline" color={color} size={size} />
+            <Ionicons
+              name="home-outline"
+              color={color}
+              size={size}
+            />
           ),
         }}
       />
@@ -53,7 +76,11 @@ function NavegacaoPrincipal() {
         component={Servicos}
         options={{
           tabBarIcon: ({ color, size }) => (
-            <Ionicons name="grid-outline" color={color} size={size} />
+            <Ionicons
+              name="grid-outline"
+              color={color}
+              size={size}
+            />
           ),
         }}
       />
@@ -63,7 +90,11 @@ function NavegacaoPrincipal() {
         component={Noticias}
         options={{
           tabBarIcon: ({ color, size }) => (
-            <Ionicons name="newspaper-outline" color={color} size={size} />
+            <Ionicons
+              name="newspaper-outline"
+              color={color}
+              size={size}
+            />
           ),
         }}
       />
@@ -73,7 +104,11 @@ function NavegacaoPrincipal() {
         component={Perfil}
         options={{
           tabBarIcon: ({ color, size }) => (
-            <Ionicons name="person-outline" color={color} size={size} />
+            <Ionicons
+              name="person-outline"
+              color={color}
+              size={size}
+            />
           ),
         }}
       />
@@ -81,35 +116,65 @@ function NavegacaoPrincipal() {
   );
 }
 
-// Navegação geral
+// Navegação de acordo com o estado de autenticação
+function NavegacaoApp() {
+  const { usuario } = useContext(UsuarioContext);
+
+  return (
+    <NavigationContainer>
+      <Stack.Navigator
+        key={usuario ? 'sessao-autenticada' : 'sessao-anonima'}
+        screenOptions={{
+          headerShown: false,
+        }}
+      >
+        {!usuario ? (
+          <>
+            <Stack.Screen
+              name="Login"
+              component={Login}
+            />
+
+            <Stack.Screen
+              name="Cadastro"
+              component={Cadastro}
+            />
+          </>
+        ) : (
+          <>
+            <Stack.Screen
+              name="Principal"
+              component={NavegacaoPrincipal}
+            />
+
+            <Stack.Screen
+              name="Notificacoes"
+              component={Notificacao}
+            />
+
+            <Stack.Screen
+              name="DetalhesNotificacao"
+              component={DetalhesNotificacao}
+            />
+
+            <Stack.Screen
+              name="DetalhesNoticia"
+              component={DetalhesNoticia}
+            />
+          </>
+        )}
+      </Stack.Navigator>
+    </NavigationContainer>
+  );
+}
+
+// Aplicativo
 export default function App() {
   return (
     <ComunicadosProvider>
-      <NavigationContainer>
-        <Stack.Navigator screenOptions={{ headerShown: false }}>
-
-          <Stack.Screen
-            name="Principal"
-            component={NavegacaoPrincipal}
-          />
-
-          <Stack.Screen
-            name="Notificacoes"
-            component={Notificacao}
-          />
-
-          <Stack.Screen
-            name="DetalhesNotificacao"
-            component={DetalhesNotificacao}
-          />
-
-          <Stack.Screen
-            name="DetalhesNoticia"
-            component={DetalhesNoticia}
-          />
-
-        </Stack.Navigator>
-      </NavigationContainer>
+      <UsuarioProvider>
+        <NavegacaoApp />
+      </UsuarioProvider>
     </ComunicadosProvider>
   );
 }

@@ -1,7 +1,7 @@
 {
   "expo": {
     "name": "minha-prefeitura",
-    "slug": "snack-2d996a45-c45e-4110-86b5-be437b4b7529",
+    "slug": "snack-3b0bb3c8-d370-43ad-9942-89bef25b6685",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -24,6 +24,9 @@
     },
     "web": {
       "favicon": "./assets/favicon.png"
-    }
+    },
+    "plugins": [
+      "expo-status-bar"
+    ]
   }
 }

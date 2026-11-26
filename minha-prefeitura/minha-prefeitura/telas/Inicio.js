@@ -17,10 +17,8 @@ import { useNavigation } from '@react-navigation/native';
 
 import AlertaCard from '../components/AlertaCard';
 import SectionHeader from '../components/Sectionheader';
-import ServiceCard from '../components/Servicecard';
 import NewsCard from '../components/Newscard';
 
-import { servicosMock } from '../data/mockData';
 import { useFetch, LoadingState, ErrorState } from '../components/ApiStates';
 import { listarNoticias, listarNotificacoes } from '../data/API';
 
@@ -222,17 +220,15 @@ export default function Inicio() {
             />
 
             <Text style={styles.sectionDescription}>
-              Acesse os principais serviços municipais.
+              Consulte os serviços municipais disponíveis.
             </Text>
 
-            <View style={styles.utilitiesGrid}>
-              {servicosMock.slice(0, 3).map((s) => (
-                <ServiceCard
-                  key={s.id}
-                  servico={s}
-                  onPress={abrirServico}
-                />
-              ))}
+            <View style={styles.servicesUnavailable}>
+              <Ionicons name="construct-outline" size={24} color="#7890b8" />
+              <Text style={styles.servicesUnavailableTitle}>Serviços em atualização</Text>
+              <Text style={styles.servicesUnavailableText}>
+                A API conectada ainda não disponibiliza o catálogo de serviços municipais.
+              </Text>
             </View>
           </View>
 

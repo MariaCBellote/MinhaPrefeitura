@@ -1,57 +1,31 @@
-import React, { useState, useMemo } from 'react';
-import { StyleSheet, View, ScrollView, SafeAreaView, Alert } from 'react-native';
+import React from 'react';
+import { StyleSheet, View, Text, SafeAreaView, ScrollView } from 'react-native';
+import { Ionicons } from '@expo/vector-icons';
 
 import ScreenHeader from '../components/ScreenHeader';
-import SearchBar from '../components/Searchbar';
-import CategoryChips from '../components/Categorychips';
-import SectionHeader from '../components/Sectionheader';
-import ServiceCard from '../components/Servicecard';
-import EmptyState from '../components/Emptystate';
-import { servicosMock, categoriasServicosMock } from '../data/mockData';
 
 export default function Servicos() {
-  const [busca, setBusca] = useState('');
-  const [categoria, setCategoria] = useState('Todos');
-
-  const servicosFiltrados = useMemo(
-    () =>
-      servicosMock.filter((s) => {
-        const okCategoria = categoria === 'Todos' || s.categoria === categoria;
-        const okBusca = s.nome.toLowerCase().includes(busca.toLowerCase());
-        return okCategoria && okBusca;
-      }),
-    [busca, categoria]
-  );
-
-  // Por enquanto mostra a descrição; depois navegue para a tela de cada módulo
-  const abrirServico = (servico) => Alert.alert(servico.nome, servico.descricao);
-
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.scroll}>
-        <ScreenHeader titulo="Serviços" subtitulo="Tudo que você precisa">
-          <SearchBar value={busca} onChangeText={setBusca} placeholder="Buscar serviços..." />
-        </ScreenHeader>
+        <ScreenHeader
+          titulo="Serviços"
+          subtitulo="Tudo que você precisa"
+        />
 
-        <View style={styles.chips}>
-          <CategoryChips
-            categorias={categoriasServicosMock}
-            selecionada={categoria}
-            onSelect={setCategoria}
-          />
-        </View>
-
-        <View style={styles.secao}>
-          <SectionHeader titulo="Serviços e Utilidades" />
-          {servicosFiltrados.length === 0 ? (
-            <EmptyState mensagem="Nenhum serviço encontrado." />
-          ) : (
-            <View style={styles.grid}>
-              {servicosFiltrados.map((s) => (
-                <ServiceCard key={s.id} servico={s} onPress={abrirServico} />
-              ))}
-            </View>
-          )}
+        <View style={styles.card}>
+          <View style={styles.icone}>
+            <Ionicons name="construct-outline" size={30} color="#1746B0" />
+          </View>
+          <Text style={styles.titulo}>Catálogo em atualização</Text>
+          <Text style={styles.descricao}>
+            A API atualmente conectada disponibiliza notícias e notificações,
+            mas ainda não possui um endpoint de serviços municipais.
+          </Text>
+          <Text style={styles.observacao}>
+            Para evitar informações fictícias, esta área será preenchida quando
+            a prefeitura disponibilizar os dados de serviços.
+          </Text>
         </View>
       </ScrollView>
     </SafeAreaView>
@@ -59,9 +33,33 @@ export default function Servicos() {
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: '#f3f4f6' },
+  container: { flex: 1, backgroundColor: '#f5f7fb' },
   scroll: { paddingBottom: 80 },
-  chips: { marginTop: 16 },
-  secao: { paddingHorizontal: 16, marginTop: 16 },
-  grid: { flexDirection: 'row', flexWrap: 'wrap', gap: 10 },
+  card: {
+    margin: 18,
+    marginTop: 24,
+    padding: 25,
+    alignItems: 'center',
+    backgroundColor: '#ffffff',
+    borderRadius: 20,
+    borderWidth: 1,
+    borderColor: '#e7edf5',
+    elevation: 2,
+    shadowColor: '#173b70',
+    shadowOpacity: 0.05,
+    shadowRadius: 10,
+    shadowOffset: { width: 0, height: 4 },
+  },
+  icone: {
+    width: 66,
+    height: 66,
+    borderRadius: 20,
+    backgroundColor: '#e8efff',
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginBottom: 17,
+  },
+  titulo: { fontSize: 19, fontWeight: '800', color: '#1e293b', textAlign: 'center' },
+  descricao: { fontSize: 14, color: '#475569', lineHeight: 22, textAlign: 'center', marginTop: 10 },
+  observacao: { fontSize: 12, color: '#8492a6', lineHeight: 19, textAlign: 'center', marginTop: 12 },
 });

@@ -51,20 +51,25 @@ export default function DetalhesNoticia({ route, navigation }) {
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: '#f3f4f6' },
+  container: { flex: 1, backgroundColor: '#f5f7fb' },
   scroll: { paddingBottom: 40 },
   card: {
     backgroundColor: '#fff',
     marginHorizontal: 16,
     marginTop: 16,
-    borderRadius: 12,
+    borderRadius: 20,
     borderWidth: 1,
-    borderColor: '#e5e7eb',
+    borderColor: '#e7edf5',
+    elevation: 2,
+    shadowColor: '#173b70',
+    shadowOpacity: 0.05,
+    shadowRadius: 10,
+    shadowOffset: { width: 0, height: 4 },
     overflow: 'hidden',
   },
-  imagem: { width: '100%', height: 190, backgroundColor: '#e5e7eb' },
-  corpo: { padding: 14, gap: 8 },
-  titulo: { fontSize: 17, fontWeight: 'bold', color: '#1f2937' },
+  imagem: { width: '100%', height: 220, backgroundColor: '#e5e7eb' },
+  corpo: { padding: 20, gap: 11 },
+  titulo: { fontSize: 21, fontWeight: '800', lineHeight: 28, color: '#1f2937' },
   data: { fontSize: 11, color: '#9ca3af' },
-  conteudo: { fontSize: 13, color: '#374151', lineHeight: 20, marginTop: 4 },
+  conteudo: { fontSize: 15, color: '#475569', lineHeight: 25, marginTop: 7 },
 });
