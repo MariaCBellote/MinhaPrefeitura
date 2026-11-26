@@ -20,6 +20,9 @@ import Perfil from './telas/Perfil';
 import Noticias from './telas/Noticias';
 import Servicos from './telas/Servicos';
 
+// Importação das telas de serviços
+import Vacinacao from './telas/Servicos/Vacinacao';
+
 // Importação das telas de notificações
 import Notificacao from './telas/Notificacao';
 import DetalhesNotificacao from './telas/DetalhesNotificacao';
@@ -160,6 +163,13 @@ function NavegacaoApp() {
             <Stack.Screen
               name="DetalhesNoticia"
               component={DetalhesNoticia}
+            />
+
+            {/* Tela de vacinação */}
+            <Stack.Screen
+              name="Vacinacao"
+              component={Vacinacao}
+              options={{ headerShown: false }}
             />
           </>
         )}
