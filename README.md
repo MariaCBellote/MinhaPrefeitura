@@ -6,6 +6,7 @@
 * Verificar se a modularização está condizente com o requerido pelo professor
 * Aprimorar o design
 * Adicionar mais categorias às notícias
+* Criar um local pra armazenar dados dos usuários criados
 
 ## Done
 * Interface de perfil
@@ -13,3 +14,4 @@
 * Interface de notícias
 * Página inicial
 * Alertas na tela
+* Tela de login e cadastro
