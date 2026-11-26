@@ -1,3 +1,8 @@
+# Recomendo rodar o projeto VSCODE
+### Como rodar:
+
+
+
 ## To Do
 * Criar paginas dos serviços oferecidos pela prefeitura
 * Implementar a busca da página inicial
