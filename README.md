@@ -2,8 +2,8 @@
 ### Como rodar:
 
 - Verificar a versão do node.js (instalar caso não tenha):
-* node -v
-* npm -v
+  * node -v
+  * npm -v
 
 - No vscode:
   * npm install
